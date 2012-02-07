@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; $Id: xlicense.el,v 1.2 2010/12/16 12:09:41 cinsk Exp $
+;; $Id: xlicense.el,v 1.1 2010/12/16 08:26:26 cinsk Exp $
 
 ;;; Code:
 
@@ -48,7 +48,7 @@
 CDR of each item is a filename of the license template")
 
 (defvar license-default-summary
-  "<one line to give the program's name and a brief idea of what it does.>"
+  "Description: "
   "Short description of what it does.")
 
 (defvar license-eol-text "!@#$EOL!@#$"
@@ -62,7 +62,7 @@ CDR of each item is a filename of the license template")
       tp)))
 
 (defvar license-keywords-alist '(("@author@" . user-full-name)
-                                 ("@email@" . "hello")
+                                 ("@email@" . "opensource@housepub.org")
                                  ("@year@" . (lambda ()
                                                (substring (current-time-string)
                                                           -4)))
@@ -110,22 +110,22 @@ replaced to AUTHOR.
 
 See `license-keywords-alist' for keywords and their meaning."
   (let (;(buffer (get-buffer-create "*LICENSE*"))
-        (desc (if (and summary (> (length summary) 0))
-                  summary
-                license-default-summary))
+        (desc (or (and summary (> (length summary) 0))
+                  license-default-summary))
         (auth (or author (user-full-name)))
         (lfile (license-file type))
         (mode major-mode)
         (fill-points nil))
-    ;;(save-current-buffer
     (with-temp-buffer
-      ;(set-buffer buffer)
-      ;(erase-buffer)
-      (insert (format "%s\n" desc))
-      (insert (format "Copyright (C) %d  %s" (nth 5 (decode-time)) auth))
+      ;; BEGIN Common
+      (insert "\n")
+      (insert (format "Author:: %s" auth))
       (if user-mail-address
           (insert (format " <%s>" user-mail-address)))
       (insert "\n")
+      (insert (format "Copyright:: Copyright (c) %d, %s" (nth 5 (decode-time)) auth))
+      (insert "\n")
+      ;; END Common
       (insert-file-contents lfile)
 
       (goto-char (point-min))
@@ -159,8 +159,7 @@ See `license-keywords-alist' for keywords and their meaning."
   (interactive)
   (let ((text (create-license
                (or type (intern (completing-read "Choose a license type: "
-                                                 license-types nil t)))
-               t (read-from-minibuffer "Summary (short description): "))))
+                                                 license-types nil t))) t)))
     (if (called-interactively-p 'any)
         (insert text)
       text)))

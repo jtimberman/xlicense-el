@@ -63,7 +63,7 @@ CDR of each item is a filename of the license template")
       tp)))
 
 (defvar license-keywords-alist '(("@author@" . user-full-name)
-                                 ("@email@" . "opensource@housepub.org")
+                                 ("@email@" . user-email-address)
                                  ("@year@" . (lambda ()
                                                (substring (current-time-string)
                                                           -4)))

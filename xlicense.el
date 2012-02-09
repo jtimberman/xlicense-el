@@ -27,8 +27,9 @@
 (require 'skeleton)
 ;;(eval-when-compile (require 'cl))
 
-(defvar license-directory (concat (file-name-as-directory user-emacs-directory)
-                                  "license")
+(defvar license-directory (concat
+                           (file-name-directory load-file-name)
+                           "licenses")
   "Directory for license templates")
 
 (defvar license-types '((gpl . "GPL-2.0")
